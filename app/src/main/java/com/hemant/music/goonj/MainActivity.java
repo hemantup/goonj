@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DATA,    //path
                 MediaStore.Audio.Media.ALBUM
         };
 
@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                         Toast.makeText(MainActivity.this, "Permission granted", Toast.LENGTH_SHORT).show();
                         Log.d("mainActivity","storage permission granted");
+                        return;
                     }
 
                     @Override
