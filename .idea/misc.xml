@@ -8,9 +8,12 @@
         <entry key="..\:/Android/Goonj/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1395" />
         <entry key="..\:/Android/Goonj/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1395" />
         <entry key="..\:/Android/Goonj/app/src/main/res/layout/activity_main.xml" value="0.176" />
+        <entry key="..\:/Android/Goonj/app/src/main/res/layout/activity_player.xml" value="0.152" />
+        <entry key="..\:/Android/Goonj/app/src/main/res/layout/fragment_all_song_list.xml" value="0.1" />
         <entry key="..\:/Android/Goonj/app/src/main/res/layout/fragment_blank.xml" value="0.1875" />
         <entry key="..\:/Android/Goonj/app/src/main/res/layout/fragment_music_list.xml" value="0.1875" />
         <entry key="..\:/Android/Goonj/app/src/main/res/layout/music_list_row.xml" value="0.1875" />
+        <entry key="..\:/Android/Goonj/app/src/main/res/layout/player.xml" value="0.1" />
         <entry key="..\:/Android/Goonj/app/src/main/res/layout/recycler_item.xml" value="0.1875" />
       </map>
     </option>
