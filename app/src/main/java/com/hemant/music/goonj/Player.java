@@ -46,6 +46,11 @@ public class Player extends AppCompatActivity {
                 if(mediaPlayer != null && fromUser){
                     mediaPlayer.seekTo(progress * 1000);
                 }
+                if(formattedTime(mediaPlayer.getCurrentPosition() / 1000).equals(formattedTime(mediaPlayer.getDuration() / 1000)))
+                {
+                    Log.e("TAG", "onProgressChanged: chal ja bhai" );
+                    nextBtnClicked();
+                }
             }
 
             @Override
@@ -101,10 +106,13 @@ public class Player extends AppCompatActivity {
         if(mediaPlayer.isPlaying()){
             mediaPlayer.stop();
             mediaPlayer.release();
-            if(position == 0)
-            {position = listSongs.size()-1;}
-            else
-            {position = position - 1;}
+            if(position <= 0) {
+                position = listSongs.size() - 1;
+            }
+            else {
+                position = position - 1;
+            }
+
             uri = Uri.parse(listSongs.get(position).getPath());
             mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
             metaData(uri);
@@ -119,6 +127,7 @@ public class Player extends AppCompatActivity {
                     handler.postDelayed(this, 1000);
                 }
             });
+            seekbar.setMax(mediaPlayer.getDuration() / 1000);
             playPauseBtn.setImageResource(R.drawable.ic_circle_pause_solid);
             mediaPlayer.start();
         }
@@ -141,13 +150,15 @@ public class Player extends AppCompatActivity {
     }
 
     private void nextBtnClicked() {
-        if(mediaPlayer.isPlaying()){
+        if(!mediaPlayer.isPlaying() || mediaPlayer.isPlaying()){
             mediaPlayer.stop();
             mediaPlayer.release();
             position = ((position + 1) % listSongs.size());
             uri = Uri.parse(listSongs.get(position).getPath());
             mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
             metaData(uri);
+            Log.e("TAG", "yaha pe aa jao");
+            System.out.println(mediaPlayer.getDuration());
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -160,6 +171,7 @@ public class Player extends AppCompatActivity {
                     handler.postDelayed(this, 1000);
                 }
             });
+            seekbar.setMax(mediaPlayer.getDuration() / 1000);
             playPauseBtn.setImageResource(R.drawable.ic_circle_pause_solid);
             mediaPlayer.start();
         }
@@ -242,11 +254,11 @@ public class Player extends AppCompatActivity {
             mediaPlayer.release();
         }
         mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
-        mediaPlayer.start();
         totalTime.setText(formattedTime(mediaPlayer.getDuration() / 1000));
         seekbar.setMax(mediaPlayer.getDuration() / 1000);
         // for cover art
         metaData(uri);
+        mediaPlayer.start();
     }
 
 
