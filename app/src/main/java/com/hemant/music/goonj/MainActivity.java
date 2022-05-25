@@ -9,8 +9,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -60,15 +58,15 @@ public class MainActivity extends AppCompatActivity {
 
         Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,Projection,selection,null,null);
         while(cursor.moveToNext()){
-            AudioModel songData = new AudioModel(
-                    cursor.getString(0),    // Song Artist
-                    cursor.getString(1),    // Song Title
-                    cursor.getString(2),    // Song Duration
-                    cursor.getString(3),    // Song Path
-                    cursor.getString(4)     // Song Album
-            );
-            if(new File(songData.getPath()).exists())
-                songList.add(songData);
+                AudioModel songData = new AudioModel(
+                        cursor.getString(0),    // Song Artist
+                        cursor.getString(1),    // Song Title
+                        cursor.getString(2),    // Song Duration
+                        cursor.getString(3),    // Song Path
+                        cursor.getString(4)     // Song Album
+                );
+                if(new File(songData.getPath()).exists())
+                    songList.add(songData);
         }
         cursor.close();
     }
