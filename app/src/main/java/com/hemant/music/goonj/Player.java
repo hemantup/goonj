@@ -9,7 +9,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -24,7 +23,7 @@ public class Player extends AppCompatActivity {
     TextView musicTitle, artist, playedTime, totalTime;
     ImageView backBtn, hamburger, previousBtn, nextBtn, shuffleBtn,repeatBtn, playPauseBtn,musicArt;
     SeekBar seekbar;
-    int position, musicProgress;
+    int position, musicProgress, repeatFlag = 0;
     static ArrayList<AudioModel> listSongs = new ArrayList<>();
     static Uri uri;
     static MediaPlayer mediaPlayer;
@@ -48,8 +47,11 @@ public class Player extends AppCompatActivity {
                 }
                 if(formattedTime(mediaPlayer.getCurrentPosition() / 1000).equals(formattedTime(mediaPlayer.getDuration() / 1000)))
                 {
-                    Log.e("TAG", "onProgressChanged: chal ja bhai" );
-                    nextBtnClicked();
+                    if(repeatFlag == 1){
+                        repeatSong();
+                    }else{
+                        nextBtnClicked();
+                    }
                 }
             }
 
@@ -61,6 +63,19 @@ public class Player extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
+            }
+        });
+
+        repeatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(repeatFlag == 0){
+                    repeatFlag = 1;
+                    repeatBtn.setColorFilter(R.color.purple_200);
+                }else{
+                    repeatFlag = 0;
+                    repeatBtn.setColorFilter(R.color.black);
+                }
             }
         });
 
@@ -76,6 +91,10 @@ public class Player extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void repeatSong() {
+        mediaPlayer.seekTo(0);
     }
 
     @Override
@@ -103,10 +122,10 @@ public class Player extends AppCompatActivity {
     }
 
     private void previousBtnClicked() {
-        if(mediaPlayer.isPlaying()){
+        if(mediaPlayer.isPlaying() || !mediaPlayer.isPlaying()){
             mediaPlayer.stop();
             mediaPlayer.release();
-            if(position <= 0) {
+            if(position == 0) {
                 position = listSongs.size() - 1;
             }
             else {
@@ -157,8 +176,6 @@ public class Player extends AppCompatActivity {
             uri = Uri.parse(listSongs.get(position).getPath());
             mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
             metaData(uri);
-            Log.e("TAG", "yaha pe aa jao");
-            System.out.println(mediaPlayer.getDuration());
 
             runOnUiThread(new Runnable() {
                 @Override
