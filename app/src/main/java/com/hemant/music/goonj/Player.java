@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -46,13 +47,20 @@ public class Player extends AppCompatActivity {
                 if(mediaPlayer != null && fromUser){
                     mediaPlayer.seekTo(progress * 1000);
                 }
-                else if(mediaPlayer.isPlaying()){
+                if(formattedTime(mediaPlayer.getDuration() / 1000)
+                        .equals(formattedTime(mediaPlayer.getCurrentPosition()/1000))){
 
                         if(repeatFlag == true) {
+                            Log.e("Repeat flag true", "onProgressChanged: ");
                             repeatSong();
-                        }else if(randomFlag == true){
+                        }
+                        else if(randomFlag == true){
+                            Log.e("random flag true", "onProgressChanged: ");
                             position = getRandomNumber();
                             playRandomSong(position);
+                        }
+                        else{
+                            nextBtnClicked();
                         }
                 }
             }
@@ -64,14 +72,6 @@ public class Player extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(formattedTime(mediaPlayer.getCurrentPosition() / 1000).equals(formattedTime(mediaPlayer.getDuration() / 1000)))
-                {
-                    if(repeatFlag == true){
-                        repeatSong();
-                    }else{
-                        nextBtnClicked();
-                    }
-                }
 
             }
         });
