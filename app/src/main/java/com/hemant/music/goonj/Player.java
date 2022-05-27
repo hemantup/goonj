@@ -23,7 +23,8 @@ public class Player extends AppCompatActivity {
     TextView musicTitle, artist, playedTime, totalTime;
     ImageView backBtn, hamburger, previousBtn, nextBtn, shuffleBtn,repeatBtn, playPauseBtn,musicArt;
     SeekBar seekbar;
-    int position, musicProgress, repeatFlag = 0;
+    int position, musicProgress;
+    Boolean repeatFlag = false, randomFlag = false;
     static ArrayList<AudioModel> listSongs = new ArrayList<>();
     static Uri uri;
     static MediaPlayer mediaPlayer;
@@ -45,13 +46,14 @@ public class Player extends AppCompatActivity {
                 if(mediaPlayer != null && fromUser){
                     mediaPlayer.seekTo(progress * 1000);
                 }
-                if(formattedTime(mediaPlayer.getCurrentPosition() / 1000).equals(formattedTime(mediaPlayer.getDuration() / 1000)))
-                {
-                    if(repeatFlag == 1){
-                        repeatSong();
-                    }else{
-                        nextBtnClicked();
-                    }
+                else if(mediaPlayer.isPlaying()){
+
+                        if(repeatFlag == true) {
+                            repeatSong();
+                        }else if(randomFlag == true){
+                            position = getRandomNumber();
+                            playRandomSong(position);
+                        }
                 }
             }
 
@@ -62,6 +64,14 @@ public class Player extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                if(formattedTime(mediaPlayer.getCurrentPosition() / 1000).equals(formattedTime(mediaPlayer.getDuration() / 1000)))
+                {
+                    if(repeatFlag == true){
+                        repeatSong();
+                    }else{
+                        nextBtnClicked();
+                    }
+                }
 
             }
         });
@@ -69,12 +79,25 @@ public class Player extends AppCompatActivity {
         repeatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(repeatFlag == 0){
-                    repeatFlag = 1;
-                    repeatBtn.setColorFilter(R.color.purple_200);
+                if(repeatFlag == false){
+                    repeatFlag = true;
+                    repeatBtn.setColorFilter(R.color.purple_700);
                 }else{
-                    repeatFlag = 0;
+                    repeatFlag = false;
                     repeatBtn.setColorFilter(R.color.black);
+                }
+            }
+        });
+
+        shuffleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(randomFlag == false){
+                    randomFlag = true;
+                    shuffleBtn.setColorFilter(R.color.purple_700);
+                }else{
+                    randomFlag = false;
+                    shuffleBtn.setColorFilter(R.color.black);
                 }
             }
         });
@@ -91,6 +114,33 @@ public class Player extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void playRandomSong(int position) {
+        uri = Uri.parse(listSongs.get(position).getPath());
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
+        metaData(uri);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mediaPlayer != null){
+                    int currentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                    seekbar.setProgress(currentPosition);
+                    playedTime.setText(formattedTime(currentPosition));
+                }
+                handler.postDelayed(this, 1000);
+            }
+        });
+        seekbar.setMax(mediaPlayer.getDuration() / 1000);
+        playPauseBtn.setImageResource(R.drawable.ic_circle_pause_solid);
+        mediaPlayer.start();
+    }
+
+    public int getRandomNumber() {
+        return (int) ((Math.random() * (listSongs.size() - 0)) + 0);
     }
 
     private void repeatSong() {
