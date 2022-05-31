@@ -40,7 +40,9 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
         holder.titleTextView.setText(songData.getTitle());
         holder.artistTextView.setText(songData.getArtist());
         holder.timeTextView.setText(formattedTime(Integer.parseInt(songData.getDuration())/ 1000));
+
         byte[] image = getAlbumArt(songData.getPath());
+
         if(image != null){
             Glide.with(context).asBitmap()
                     .load(image)

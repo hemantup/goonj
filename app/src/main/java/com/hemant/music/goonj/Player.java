@@ -24,7 +24,7 @@ public class Player extends AppCompatActivity {
     TextView musicTitle, artist, playedTime, totalTime;
     ImageView backBtn, hamburger, previousBtn, nextBtn, shuffleBtn,repeatBtn, playPauseBtn,musicArt;
     SeekBar seekbar;
-    int position, musicProgress;
+    int position = 0, musicProgress = 0;
     Boolean repeatFlag = false, randomFlag = false;
     static ArrayList<AudioModel> listSongs = new ArrayList<>();
     static Uri uri;
@@ -51,11 +51,11 @@ public class Player extends AppCompatActivity {
                         .equals(formattedTime(mediaPlayer.getCurrentPosition()/1000))){
 
                         if(repeatFlag == true) {
-                            Log.e("Repeat flag true", "onProgressChanged: ");
+                            Log.d("Repeat flag true", "onProgressChanged: ");
                             repeatSong();
                         }
                         else if(randomFlag == true){
-                            Log.e("random flag true", "onProgressChanged: ");
+                            Log.d("random flag true", "onProgressChanged: ");
                             position = getRandomNumber();
                             playRandomSong(position);
                         }
@@ -79,8 +79,10 @@ public class Player extends AppCompatActivity {
         repeatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(repeatFlag == false){
+                if(((!repeatFlag) && (randomFlag = true)) || (randomFlag = false)){
                     repeatFlag = true;
+                    randomFlag = false;
+                    shuffleBtn.setColorFilter(R.color.black);
                     repeatBtn.setColorFilter(R.color.purple_700);
                 }else{
                     repeatFlag = false;
@@ -92,9 +94,11 @@ public class Player extends AppCompatActivity {
         shuffleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(randomFlag == false){
+                if(((!randomFlag) && (repeatFlag = true)) || (repeatFlag = false)){
                     randomFlag = true;
+                    repeatFlag = false;
                     shuffleBtn.setColorFilter(R.color.purple_700);
+                    repeatBtn.setColorFilter(R.color.black);
                 }else{
                     randomFlag = false;
                     shuffleBtn.setColorFilter(R.color.black);
@@ -110,7 +114,7 @@ public class Player extends AppCompatActivity {
                     seekbar.setProgress(currentPosition);
                     playedTime.setText(formattedTime(currentPosition));
                 }
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 500);
             }
         });
 
@@ -131,7 +135,7 @@ public class Player extends AppCompatActivity {
                     seekbar.setProgress(currentPosition);
                     playedTime.setText(formattedTime(currentPosition));
                 }
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 500);
             }
         });
         seekbar.setMax(mediaPlayer.getDuration() / 1000);
@@ -172,7 +176,7 @@ public class Player extends AppCompatActivity {
     }
 
     private void previousBtnClicked() {
-        if(mediaPlayer.isPlaying() || !mediaPlayer.isPlaying()){
+
             mediaPlayer.stop();
             mediaPlayer.release();
             if(position == 0) {
@@ -193,13 +197,13 @@ public class Player extends AppCompatActivity {
                         seekbar.setProgress(currentPosition);
                         playedTime.setText(formattedTime(currentPosition));
                     }
-                    handler.postDelayed(this, 1000);
+                    handler.postDelayed(this, 500);
                 }
             });
             seekbar.setMax(mediaPlayer.getDuration() / 1000);
             playPauseBtn.setImageResource(R.drawable.ic_circle_pause_solid);
             mediaPlayer.start();
-        }
+
     }
 
     private void nextThreadBtn() {
@@ -219,7 +223,7 @@ public class Player extends AppCompatActivity {
     }
 
     private void nextBtnClicked() {
-        if(!mediaPlayer.isPlaying() || mediaPlayer.isPlaying()){
+
             mediaPlayer.stop();
             mediaPlayer.release();
             position = ((position + 1) % listSongs.size());
@@ -235,13 +239,13 @@ public class Player extends AppCompatActivity {
                         seekbar.setProgress(currentPosition);
                         playedTime.setText(formattedTime(currentPosition));
                     }
-                    handler.postDelayed(this, 1000);
+                    handler.postDelayed(this, 500);
                 }
             });
             seekbar.setMax(mediaPlayer.getDuration() / 1000);
             playPauseBtn.setImageResource(R.drawable.ic_circle_pause_solid);
             mediaPlayer.start();
-        }
+
     }
 
     private void playThreadBtn() {
@@ -265,6 +269,7 @@ public class Player extends AppCompatActivity {
             playPauseBtn.setImageResource(R.drawable.ic_play_solid);
             mediaPlayer.pause();
             seekbar.setMax(mediaPlayer.getDuration() / 1000);
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -273,7 +278,7 @@ public class Player extends AppCompatActivity {
                         seekbar.setProgress(currentPosition);
                         playedTime.setText(formattedTime(currentPosition));
                     }
-                    handler.postDelayed(this, 1000);
+                    handler.postDelayed(this, 500);
                 }
             });
         }
@@ -287,8 +292,9 @@ public class Player extends AppCompatActivity {
                     if(mediaPlayer != null){
                         int currentPosition = mediaPlayer.getCurrentPosition() / 1000;
                         seekbar.setProgress(currentPosition);
+                        playedTime.setText(formattedTime(currentPosition));
                     }
-                    handler.postDelayed(this, 1000);
+                    handler.postDelayed(this, 500);
                 }
             });
         }
