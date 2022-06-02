@@ -22,10 +22,10 @@ import java.util.ArrayList;
 public class Player extends AppCompatActivity {
 
     TextView musicTitle, artist, playedTime, totalTime;
-    ImageView backBtn, hamburger, previousBtn, nextBtn, shuffleBtn,repeatBtn, playPauseBtn,musicArt;
+    ImageView backBtn, hamburger, previousBtn, nextBtn, shuffleBtn,repeatBtn, playPauseBtn,musicArt,favIcon;
     SeekBar seekbar;
     int position = 0, musicProgress = 0;
-    Boolean repeatFlag = false, randomFlag = false;
+    Boolean repeatFlag = false, randomFlag = false, favFlag=false;
     static ArrayList<AudioModel> listSongs = new ArrayList<>();
     static Uri uri;
     static MediaPlayer mediaPlayer;
@@ -105,6 +105,19 @@ public class Player extends AppCompatActivity {
                 }
             }
         });
+        
+        favIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(favFlag=false){
+                    favFlag=true;
+                    addFavSong(mediaPlayer);
+                }else{
+                    favFlag=false;
+                    removeFavSong(mediaPlayer);
+                }
+            }
+        });
 
         runOnUiThread(new Runnable() {
             @Override
@@ -118,6 +131,13 @@ public class Player extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void removeFavSong(MediaPlayer mediaPlayer) {
+    }
+
+    private void addFavSong(MediaPlayer mediaPlayer) {
+        
     }
 
     private void playRandomSong(int position) {
@@ -349,6 +369,7 @@ public class Player extends AppCompatActivity {
         playPauseBtn = findViewById(R.id.playAndPause);
         seekbar = findViewById(R.id.musicSeekbar);
         musicArt = findViewById(R.id.musicArt);
+        favIcon = findViewById(R.id.favIcon);
     }
 
     private void metaData(Uri uri){
